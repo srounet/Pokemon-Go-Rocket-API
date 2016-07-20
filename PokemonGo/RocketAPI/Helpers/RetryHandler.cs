@@ -31,9 +31,10 @@ namespace PokemonGo.RocketAPI.Helpers
                     
                     return response;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    System.Console.WriteLine($"retry request {request.RequestUri}");
+
+                    System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] [#{i} of {MaxRetries}] retry request {request.RequestUri}");
                     if (i < MaxRetries)
                     {
                         await Task.Delay(1000);

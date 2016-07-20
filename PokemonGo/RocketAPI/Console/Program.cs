@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using AllEnum;
 using Google.Protobuf;
@@ -26,6 +30,8 @@ namespace PokemonGo.RocketAPI.Console
             {
                 try
                 {
+                    System.Console.WriteLine("Coded by Ferox - edited by NecronomiconCoding");
+                    CheckVersion();
                     Execute();
                 }
                 catch (PtcOfflineException)
@@ -55,11 +61,21 @@ namespace PokemonGo.RocketAPI.Console
             var mapObjects = await client.GetMapObjects();
             var inventory = await client.GetInventory();
             var pokemons = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon).Where(p => p != null && p?.PokemonId > 0);
-          
+
+            if (ClientSettings.TransferAllButStrongestUnwantedPokemon)
+                await TransferAllButStrongestUnwantedPokemon(client);
+            if (ClientSettings.EvolveAllGivenPokemons)
+                await EvolveAllGivenPokemons(client, pokemons);
+            if (ClientSettings.TransferAllGivenPokemons)
+                await TransferAllGivenPokemons(client, pokemons);
+            if (ClientSettings.TransferDuplicatePokemon)
+                TransferDuplicatePokemon(client);
+
 
             await ExecuteFarmingPokestopsAndPokemons(client);
-            await TransferAllButStrongestUnwantedPokemon(client);
-            await EvolveAllGivenPokemons(client, pokemons);
+          
+            
+
             //await ExecuteCatchAllNearbyPokemons(client);
 
 
@@ -96,11 +112,10 @@ namespace PokemonGo.RocketAPI.Console
             {
                 var update = await client.UpdatePlayerLocation(pokemon.Latitude, pokemon.Longitude);
                 var encounterPokemonRespone = await client.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnpointId);
-
                 CatchPokemonResponse caughtPokemonResponse;
                 do
                 {
-                    caughtPokemonResponse = await client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, pokemon.Latitude, pokemon.Longitude, MiscEnums.Item.ITEM_POKE_BALL); //note: reverted from settings because this should not be part of settings but part of logic
+                    caughtPokemonResponse = await client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, pokemon.Latitude, pokemon.Longitude, MiscEnums.Item.ITEM_POKE_BALL); ; //note: reverted from settings because this should not be part of settings but part of logic
                 } 
                 while(caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed);
 
@@ -111,6 +126,7 @@ namespace PokemonGo.RocketAPI.Console
                 await Task.Delay(5000);
             }
         }
+
         private static async Task TransferAllGivenPokemons(Client client, IEnumerable<PokemonData> unwantedPokemons)
         {
             foreach (var pokemon in unwantedPokemons)
@@ -175,15 +191,16 @@ namespace PokemonGo.RocketAPI.Console
                     else
                     {
                         var result = evolvePokemonOutProto.Result;
-
+                        /*
                         System.Console.WriteLine($"Failed to evolve {pokemon.PokemonId}. " +
                                                  $"EvolvePokemonOutProto.Result was {result}");
 
                         System.Console.WriteLine($"Due to above error, stopping evolving {pokemon.PokemonId}");
+                        */
                     }
                 }
                 while (evolvePokemonOutProto.Result == 1);
-
+                if (countOfEvolvedUnits > 0)
                 System.Console.WriteLine($"Evolved {countOfEvolvedUnits} pieces of {pokemon.PokemonId} for {xpCount}xp");
 
                 await Task.Delay(3000);
@@ -278,6 +295,46 @@ namespace PokemonGo.RocketAPI.Console
                     }
                 }
             }
+        }
+
+        public static void CheckVersion()
+        {
+            try
+            {
+                var match =
+                    new Regex(
+                        @"\[assembly\: AssemblyVersion\(""(\d{1,})\.(\d{1,})\.(\d{1,})\.(\d{1,})""\)\]")
+                        .Match(DownloadServerVersion());
+
+                if (!match.Success) return;
+                var gitVersion =
+                    new Version(
+                        string.Format(
+                            "{0}.{1}.{2}.{3}",
+                            match.Groups[1],
+                            match.Groups[2],
+                            match.Groups[3],
+                            match.Groups[4]));
+
+                if (gitVersion <= Assembly.GetExecutingAssembly().GetName().Version)
+                {
+                    System.Console.WriteLine("Awesome! You have already got the newest version!");
+                    return;
+                };
+
+                System.Console.WriteLine("There is a new Version available: " + gitVersion + " downloading.. ");
+                Thread.Sleep(1000);
+                System.Diagnostics.Process.Start("https://github.com/NecronomiconCoding/Pokemon-Go-Rocket-API");
+            }
+            catch (Exception)
+            {    
+                System.Console.WriteLine("Unable to check for updates now...");
+            }
+        }
+
+        private static string DownloadServerVersion()
+        {
+            using (var wC = new WebClient()) return wC.DownloadString("https://raw.githubusercontent.com/NecronomiconCoding/Pokemon-Go-Rocket-API/master/PokemonGo/RocketAPI/Console/Properties/AssemblyInfo.cs");
         }
     }
 }

@@ -31,7 +31,7 @@ namespace PokemonGo.RocketAPI.Login
                 await Task.Delay(2000);
                 tokenResponse = await PollSubmittedToken(deviceCodeResponse.device_code);
             } while (tokenResponse.access_token == null || tokenResponse.refresh_token == null);
-
+            Console.WriteLine("Logged in Google Account..");
             return tokenResponse;
         }
 
