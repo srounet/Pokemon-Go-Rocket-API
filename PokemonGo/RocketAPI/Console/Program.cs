@@ -167,7 +167,7 @@ namespace PokemonGo.RocketAPI.Console
             foreach (var pokemon in pokemons)
             {
                 var update = await client.UpdatePlayerLocation(pokemon.Latitude, pokemon.Longitude);
-                var encounterPokemonRespone = await client.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnpointId);
+                var encounterPokemonResponse = await client.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnpointId);
                 CatchPokemonResponse caughtPokemonResponse;
                 do
                 {
@@ -177,11 +177,11 @@ namespace PokemonGo.RocketAPI.Console
                                 pokemon.Longitude, MiscEnums.Item.ITEM_POKE_BALL);
                     ; //note: reverted from settings because this should not be part of settings but part of logic
                 } while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed);
-
                 System.Console.WriteLine(caughtPokemonResponse.Status ==
                                          CatchPokemonResponse.Types.CatchStatus.CatchSuccess
-                    ? $"[{DateTime.Now.ToString("HH:mm:ss")}] We caught a {pokemon.PokemonId}"
-                    : $"[{DateTime.Now.ToString("HH:mm:ss")}] {pokemon.PokemonId} got away..");
+                    ? $"[{DateTime.Now.ToString("HH:mm:ss")}] We caught a {pokemon.PokemonId} with CP {encounterPokemonResponse?.WildPokemon?.PokemonData?.Cp}"
+                    : $"[{DateTime.Now.ToString("HH:mm:ss")}] {pokemon.PokemonId} with CP {encounterPokemonResponse?.WildPokemon?.PokemonData?.Cp} got away..");
+
                 await Task.Delay(5000);
 
 
