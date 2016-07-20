@@ -19,7 +19,7 @@ namespace PokemonGo.RocketAPI.Console
         public bool EvolveAllGivenPokemons => GetSetting() != string.Empty ? System.Convert.ToBoolean(GetSetting(), CultureInfo.InvariantCulture) : false;
 
 
-        public AuthType AuthType => AuthType.Google; // what authentication method you want
+        public AuthType AuthType => (GetSetting() != string.Empty ? GetSetting() : "Ptc") == "Ptc" ? AuthType.Ptc : AuthType.Google;
         public string PtcUsername => GetSetting() != string.Empty ? GetSetting() : "username";
         public string PtcPassword => GetSetting() != string.Empty ? GetSetting() : "password";
 
