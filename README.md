@@ -1,24 +1,5 @@
 # Pokemon-Go-Rocket-API
 
-# Pokemon Go Client API Library in C# #
-
-Example:
-
-```
-var client = new Client(Settings.DefaultLatitude, Settings.DefaultLongitude);
-
-await client.LoginPtc("FeroxRev", "Sekret");
-//await client.LoginGoogle(Settings.DeviceId, Settings.Email, Settings.LongDurationToken);
-var serverResponse = await client.GetServer();
-var profile = await client.GetProfile();
-var settings = await client.GetSettings();
-var mapObjects = await client.GetMapObjects();
-var inventory = await client.GetInventory();
-
-await ExecuteFarmingPokestops(client);
-await ExecuteCatchAllNearbyPokemons(client);
-```
-
 Features
 ```
 #PTC Login / Google
@@ -26,12 +7,9 @@ Features
 #Search for gyms/pokestops/spawns
 #Farm pokestops
 #Farm all pokemons in neighbourhood
+#Evolve pokemons
+#Transfer pokemons
 ```
-
-Todo
-
+Setup
 ```
-#Gotta catch them all
-#Map Enums
-```
-
+#Go to Settings.cs -> Edit the Location Latitude and Longitude -> Run!
