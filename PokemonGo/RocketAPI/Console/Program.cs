@@ -55,12 +55,14 @@ namespace PokemonGo.RocketAPI.Console
             var mapObjects = await client.GetMapObjects();
             var inventory = await client.GetInventory();
             var pokemons = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon).Where(p => p != null && p?.PokemonId > 0);
-
+          
 
             await ExecuteFarmingPokestopsAndPokemons(client);
+            await TransferAllButStrongestUnwantedPokemon(client);
+            await EvolveAllGivenPokemons(client, pokemons);
             //await ExecuteCatchAllNearbyPokemons(client);
 
-            
+
         }
 
         private static async Task ExecuteFarmingPokestopsAndPokemons(Client client)
@@ -140,7 +142,7 @@ namespace PokemonGo.RocketAPI.Console
             }
         }
 
-        private static async Task EvolveAllGivenPokemons(Client client, IEnumerable<Pokemon> pokemonToEvolve)
+        private static async Task EvolveAllGivenPokemons(Client client, IEnumerable<PokemonData> pokemonToEvolve)
         {
             foreach (var pokemon in pokemonToEvolve)
             {
@@ -165,7 +167,7 @@ namespace PokemonGo.RocketAPI.Console
 
                     if (evolvePokemonOutProto.Result == 1)
                     {
-                        System.Console.WriteLine($"Evolved {pokemon.PokemonType} successfully for {evolvePokemonOutProto.ExpAwarded}xp");
+                        System.Console.WriteLine($"Evolved {pokemon.PokemonId} successfully for {evolvePokemonOutProto.ExpAwarded}xp");
 
                         countOfEvolvedUnits++;
                         xpCount += evolvePokemonOutProto.ExpAwarded;
@@ -174,15 +176,15 @@ namespace PokemonGo.RocketAPI.Console
                     {
                         var result = evolvePokemonOutProto.Result;
 
-                        System.Console.WriteLine($"Failed to evolve {pokemon.PokemonType}. " +
+                        System.Console.WriteLine($"Failed to evolve {pokemon.PokemonId}. " +
                                                  $"EvolvePokemonOutProto.Result was {result}");
 
-                        System.Console.WriteLine($"Due to above error, stopping evolving {pokemon.PokemonType}");
+                        System.Console.WriteLine($"Due to above error, stopping evolving {pokemon.PokemonId}");
                     }
                 }
                 while (evolvePokemonOutProto.Result == 1);
 
-                System.Console.WriteLine($"Evolved {countOfEvolvedUnits} pieces of {pokemon.PokemonType} for {xpCount}xp");
+                System.Console.WriteLine($"Evolved {countOfEvolvedUnits} pieces of {pokemon.PokemonId} for {xpCount}xp");
 
                 await Task.Delay(3000);
             }
