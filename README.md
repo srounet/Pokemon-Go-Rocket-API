@@ -9,6 +9,7 @@ Features
 #Farm all pokemons in neighbourhood
 #Evolve pokemons
 #Transfer pokemons
+#Auto Updates
 ```
 Setup
 ```
