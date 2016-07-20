@@ -147,7 +147,7 @@ namespace PokemonGo.RocketAPI.Console
             else if (ClientSettings.TransferType == "cp")
                 await TransferAllWeakPokemon(client, ClientSettings.TransferCPThreshold);
             else
-                System.Console.WriteLine("Wrong trasnferType setting");
+                System.Console.WriteLine("Transfering pokemon disabled");
             if (ClientSettings.EvolveAllGivenPokemons)
                 await EvolveAllGivenPokemons(client, pokemons);
 

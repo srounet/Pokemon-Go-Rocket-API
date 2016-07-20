@@ -14,8 +14,8 @@ namespace PokemonGo.RocketAPI.Console
         /// <summary>
         ///     CHANGE THESE SETTINGS AS YOU LIKE
         /// </summary>
-        public string TransferType => GetSetting() != string.Empty ? GetSetting() : "cp"; //if empty, better leave CP with 0 threshold so it doesn't transfer anything
-        public int TransferCPThreshold => GetSetting() != string.Empty ? int.Parse(GetSetting(), CultureInfo.InvariantCulture) : 0;//Default 0 doesn't transfer anything
+        public string TransferType => GetSetting() != string.Empty ? GetSetting() : "none";
+        public int TransferCPThreshold => GetSetting() != string.Empty ? int.Parse(GetSetting(), CultureInfo.InvariantCulture) : 0;
         public bool EvolveAllGivenPokemons => GetSetting() != string.Empty ? System.Convert.ToBoolean(GetSetting(), CultureInfo.InvariantCulture) : false;
 
 
