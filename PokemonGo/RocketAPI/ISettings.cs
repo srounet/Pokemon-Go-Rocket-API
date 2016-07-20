@@ -1,5 +1,8 @@
-﻿using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.GeneratedCode;
+﻿#region
+
+using PokemonGo.RocketAPI.Enums;
+
+#endregion
 
 namespace PokemonGo.RocketAPI
 {
@@ -11,5 +14,9 @@ namespace PokemonGo.RocketAPI
         string GoogleRefreshToken { get; set; }
         string PtcPassword { get; }
         string PtcUsername { get; }
+        bool TransferAllButStrongestUnwantedPokemon { get; set; }
+        bool EvolveAllGivenPokemons { get; set; }
+        bool TransferAllGivenPokemons { get; set; }
+        bool TransferDuplicatePokemon { get; set; }
     }
 }
