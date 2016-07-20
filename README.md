@@ -12,4 +12,4 @@ Features
 ```
 Setup
 ```
-#Go to Settings.cs -> Edit the Settings you like -> Build and Run (CTRL+F5)
+#Go to PokemonGo\RocketAPI\Console\App.config -> Edit the Settings you like -> Build and Run (CTRL+F5)
