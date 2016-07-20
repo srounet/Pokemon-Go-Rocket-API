@@ -447,7 +447,7 @@ enum PokemonId {
   NIDORAN_MALE = 32;
   NIDORINO = 33;
   NIDOKING = 34;
-  CLEFARY = 35;
+  CLEFAIRY  = 35;
   CLEFABLE = 36;
   VULPIX = 37;
   NINETALES = 38;
