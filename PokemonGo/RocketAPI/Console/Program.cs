@@ -138,14 +138,18 @@ namespace PokemonGo.RocketAPI.Console
                 inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon)
                     .Where(p => p != null && p?.PokemonId > 0);
 
-            if (ClientSettings.TransferAllButStrongestUnwantedPokemon)
+            if (ClientSettings.TransferType == "leaveStrongest")
                 await TransferAllButStrongestUnwantedPokemon(client);
+            else if (ClientSettings.TransferType == "all")
+                await TransferAllGivenPokemons(client, pokemons);
+            else if (ClientSettings.TransferType == "duplicate")
+                await TransferDuplicatePokemon(client);
+            else if (ClientSettings.TransferType == "cp")
+                await TransferAllWeakPokemon(client, ClientSettings.TransferCPThreshold);
+            else
+                System.Console.WriteLine("Wrong trasnferType setting");
             if (ClientSettings.EvolveAllGivenPokemons)
                 await EvolveAllGivenPokemons(client, pokemons);
-            if (ClientSettings.TransferAllGivenPokemons)
-                await TransferAllGivenPokemons(client, pokemons);
-            if (ClientSettings.TransferDuplicatePokemon)
-                TransferDuplicatePokemon(client);
 
 
             await ExecuteFarmingPokestopsAndPokemons(client);
@@ -327,7 +331,7 @@ namespace PokemonGo.RocketAPI.Console
             }
         }
 
-        private static async void TransferDuplicatePokemon(Client client)
+        private static async Task TransferDuplicatePokemon(Client client)
         {
             checkForDuplicates++;
             if (checkForDuplicates%50 == 0)
@@ -354,6 +358,55 @@ namespace PokemonGo.RocketAPI.Console
                     }
                 }
             }
+        }
+
+        private static async Task TransferAllWeakPokemon(Client client, int cpThreshold)
+        {
+            System.Console.WriteLine("[!] firing up the meat grinder");
+
+            var doNotTransfer = new[] //these will not be transferred even when below the CP threshold
+            {
+                //PokemonId.Pidgey,
+                //PokemonId.Rattata,
+                //PokemonId.Weedle,
+                //PokemonId.Zubat,
+                //PokemonId.Caterpie,
+                //PokemonId.Pidgeotto,
+                //PokemonId.NidoranFemale,
+                //PokemonId.Paras,
+                //PokemonId.Venonat,
+                //PokemonId.Psyduck,
+                //PokemonId.Poliwag,
+                //PokemonId.Slowpoke,
+                //PokemonId.Drowzee,
+                //PokemonId.Gastly,
+                //PokemonId.Goldeen,
+                //PokemonId.Staryu,
+                PokemonId.Magikarp,
+                PokemonId.Eevee//,
+                //PokemonId.Dratini
+            };
+
+            var inventory = await client.GetInventory();
+            var pokemons = inventory.InventoryDelta.InventoryItems
+                                .Select(i => i.InventoryItemData?.Pokemon)
+                                .Where(p => p != null && p?.PokemonId > 0)
+                                .ToArray();
+
+            //foreach (var unwantedPokemonType in unwantedPokemonTypes)
+            {
+                var pokemonToDiscard = pokemons.Where(p => !doNotTransfer.Contains(p.PokemonId) && p.Cp < cpThreshold)
+                                                   .OrderByDescending(p => p.Cp)
+                                                   .ToList();
+
+                //var unwantedPokemon = pokemonOfDesiredType.Skip(1) // keep the strongest one for potential battle-evolving
+                //                                          .ToList();
+                System.Console.WriteLine($"Grinding {pokemonToDiscard.Count} pokemon below {cpThreshold} CP.");
+                await TransferAllGivenPokemons(client, pokemonToDiscard);
+
+            }
+
+            System.Console.WriteLine("[!] finished grinding all the meat");
         }
     }
 }

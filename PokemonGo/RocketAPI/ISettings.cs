@@ -14,9 +14,8 @@ namespace PokemonGo.RocketAPI
         string GoogleRefreshToken { get; set; }
         string PtcPassword { get; }
         string PtcUsername { get; }
-        bool TransferAllButStrongestUnwantedPokemon { get; set; }
-        bool EvolveAllGivenPokemons { get; set; }
-        bool TransferAllGivenPokemons { get; set; }
-        bool TransferDuplicatePokemon { get; set; }
+        bool EvolveAllGivenPokemons { get; }
+        string TransferType { get; }
+        int TransferCPThreshold { get; }
     }
 }

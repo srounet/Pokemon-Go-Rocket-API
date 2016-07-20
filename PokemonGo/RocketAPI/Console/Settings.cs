@@ -14,13 +14,10 @@ namespace PokemonGo.RocketAPI.Console
         /// <summary>
         ///     CHANGE THESE SETTINGS AS YOU LIKE
         /// </summary>
-        public bool TransferAllGivenPokemons { get; set; } = false; //HANDLE WITH CARE - Transfers EVERYTHING
+        public string TransferType => GetSetting() != string.Empty ? GetSetting() : "cp"; //if empty, better leave CP with 0 threshold so it doesn't transfer anything
+        public int TransferCPThreshold => GetSetting() != string.Empty ? int.Parse(GetSetting(), CultureInfo.InvariantCulture) : 0;//Default 0 doesn't transfer anything
+        public bool EvolveAllGivenPokemons => GetSetting() != string.Empty ? System.Convert.ToBoolean(GetSetting(), CultureInfo.InvariantCulture) : false;
 
-        public bool EvolveAllGivenPokemons { get; set; } = false; // Evolves everything!
-
-        public bool TransferAllButStrongestUnwantedPokemon { get; set; } = false; // Transfers those crappy Pokemons
-
-        public bool TransferDuplicatePokemon { get; set; } = false; // Transfers Pokemon that you have duplicate
 
         public AuthType AuthType => AuthType.Google; // what authentication method you want
         public string PtcUsername => GetSetting() != string.Empty ? GetSetting() : "username";
