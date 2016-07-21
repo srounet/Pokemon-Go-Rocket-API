@@ -103,7 +103,7 @@ namespace PokemonGo.RocketAPI.Logic
             foreach (var pokeStop in pokeStops)
             {
                 var distance = Navigation.DistanceBetween2Coordinates(_client.CurrentLat, _client.CurrentLng, pokeStop.Latitude, pokeStop.Longitude);
-                var update = await _client.UpdatePlayerLocation(pokeStop.Latitude, pokeStop.Longitude);
+                var update = await _client.UpdatePlayerLocation(pokeStop.Latitude, pokeStop.Longitude, _clientSettings.DefaultAltitude);
                 var fortInfo = await _client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                 var fortSearch = await _client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                 Logger.Write($"Using Pokestop: {fortInfo.Name} in {Math.Round(distance)}m distance");
@@ -129,7 +129,7 @@ namespace PokemonGo.RocketAPI.Logic
                 else
                     await Task.Delay(500);
 
-                await _client.UpdatePlayerLocation(pokemon.Latitude, pokemon.Longitude);
+                await _client.UpdatePlayerLocation(pokemon.Latitude, pokemon.Longitude, _clientSettings.DefaultAltitude);
 
                 var encounter = await _client.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnpointId);
                 await CatchEncounter(encounter, pokemon);
