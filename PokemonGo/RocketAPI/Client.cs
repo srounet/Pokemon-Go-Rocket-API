@@ -162,45 +162,45 @@ namespace PokemonGo.RocketAPI
             // Use better balls for high CP pokemon
             if (masterBallsCount > 0 && pokemonCP >= 1000)
             {
-                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a MASTER BALL with ({masterBallsCount} Left)");
+                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a MASTER BALL ({masterBallsCount - 1} Left)");
                 return MiscEnums.Item.ITEM_MASTER_BALL;
             }
 
             if (ultraBallsCount > 0 && pokemonCP >= 600)
             {
-                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using an ULTRA BALL with ({ultraBallsCount} Left)");
+                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using an ULTRA BALL ({ultraBallsCount - 1} Left)");
                 return MiscEnums.Item.ITEM_ULTRA_BALL;
             }
 
             if (greatBallsCount > 0 && pokemonCP >= 350)
             {
-                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a GREAT BALL with ({greatBallsCount} Left)");
+                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a GREAT BALL ({greatBallsCount - 1} Left)");
                 return MiscEnums.Item.ITEM_GREAT_BALL;
             }
 
             // If low CP pokemon, but no more pokeballs; only use better balls if pokemon are of semi-worthy quality
             if (pokeBallsCount > 0)
             {
-                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a POKE BALL with ({pokeBallsCount} Left)");
+                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a POKE BALL ({pokeBallsCount - 1} Left)");
                 return MiscEnums.Item.ITEM_POKE_BALL;
             }
             else if ((greatBallsCount < 40 && greatBallsCount > 0 && pokemonCP >= 200) || greatBallsCount >= 40)
             {
-                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a GREAT BALL with ({greatBallsCount} Left)");
+                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a GREAT BALL ({greatBallsCount - 1} Left)");
                 return MiscEnums.Item.ITEM_GREAT_BALL;
             }
             else if (ultraBallsCount > 0 && pokemonCP >= 500)
             {
-                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using an ULTRA BALL with ({ultraBallsCount} Left)");
+                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using an ULTRA BALL ({ultraBallsCount - 1} Left)");
                 return MiscEnums.Item.ITEM_ULTRA_BALL;
             }
             else if (masterBallsCount > 0 && pokemonCP >= 700)
             {
-                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a MASTER BALL with ({masterBallsCount} Left)");
+                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a MASTER BALL ({masterBallsCount - 1} Left)");
                 return MiscEnums.Item.ITEM_MASTER_BALL;
             }
 
-            System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Attempting to use a POKE BALL with ({pokeBallsCount} Left)");
+            System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Low CP Pokemon and no POKE BALL remaining. Do Not Catch.");
             return MiscEnums.Item.ITEM_POKE_BALL;
         }
 
