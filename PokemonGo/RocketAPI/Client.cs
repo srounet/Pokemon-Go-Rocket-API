@@ -184,7 +184,7 @@ namespace PokemonGo.RocketAPI
                 System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a POKE BALL with ({pokeBallsCount} Left)");
                 return MiscEnums.Item.ITEM_POKE_BALL;
             }
-            else if ((greatBallsCount < 40 && pokemonCP >= 200) || greatBallsCount >= 40)
+            else if ((greatBallsCount < 40 && greatBallsCount > 0 && pokemonCP >= 200) || greatBallsCount >= 40)
             {
                 System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using a GREAT BALL with ({greatBallsCount} Left)");
                 return MiscEnums.Item.ITEM_GREAT_BALL;
