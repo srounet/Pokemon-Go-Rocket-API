@@ -363,7 +363,7 @@ namespace PokemonGo.RocketAPI.Console
 
         private static async Task TransferAllWeakPokemon(Client client, int cpThreshold)
         {
-            System.Console.WriteLine("[!] firing up the meat grinder");
+            // System.Console.WriteLine("[!] firing up the meat grinder");
 
             var doNotTransfer = new[] //these will not be transferred even when below the CP threshold
             {
@@ -402,12 +402,12 @@ namespace PokemonGo.RocketAPI.Console
 
                 //var unwantedPokemon = pokemonOfDesiredType.Skip(1) // keep the strongest one for potential battle-evolving
                 //                                          .ToList();
-                System.Console.WriteLine($"Grinding {pokemonToDiscard.Count} pokemon below {cpThreshold} CP.");
+                //System.Console.WriteLine($"Grinding {pokemonToDiscard.Count} pokemon below {cpThreshold} CP.");
                 await TransferAllGivenPokemons(client, pokemonToDiscard);
 
             }
 
-            System.Console.WriteLine("[!] finished grinding all the meat");
+            //System.Console.WriteLine("[!] finished grinding all the meat");
         }
     }
 }
