@@ -42,6 +42,5 @@ Note: There is a list of feature requests [here](https://github.com/FeroxRev/Pok
 
 ```
 #Gotta catch them all
-#Map Enums
 ```
 
