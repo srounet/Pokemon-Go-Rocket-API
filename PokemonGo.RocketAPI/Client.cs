@@ -18,7 +18,7 @@ namespace PokemonGo.RocketAPI
         private readonly ISettings _settings;
         private readonly HttpClient _httpClient;
         private AuthType _authType = AuthType.Google;
-        private string _accessToken;
+        public string AccessToken { get; set; }
         private string _apiUrl;
         private Request.Types.UnknownAuth _unknownAuth;
 
@@ -58,44 +58,30 @@ namespace PokemonGo.RocketAPI
             if (_settings.GoogleRefreshToken != string.Empty)
             {
                 var tokenResponse = await GoogleLogin.GetAccessToken(_settings.GoogleRefreshToken);
-                _accessToken = tokenResponse.id_token;
+                AccessToken = tokenResponse.id_token;
             }
             
-            if (_accessToken == null)
+            if (AccessToken == null)
             {
-                // Separate methods for GUI implementation
-                var deviceCode = await GetGoogleDeviceCode();
-                await GetAndSetGoogleAccessToken(deviceCode);
+                var deviceCode = await GoogleLogin.GetDeviceCode();
+                var tokenResponse = await GoogleLogin.GetAccessToken(deviceCode);
+                AccessToken = tokenResponse.id_token;
+                _settings.GoogleRefreshToken = tokenResponse.access_token;
             }
         }
 
         /// <summary>
-        /// Only use it you are implementing GUI
+        /// For GUI clients only. GUI clients don't use the DoGoogleLogin, but call the GoogleLogin class directly
         /// </summary>
-        /// <returns></returns>
-        public async Task<GoogleLogin.DeviceCodeModel> GetGoogleDeviceCode()
+        /// <param name="type"></param>
+        public void SetAuthType(AuthType type)
         {
-            return await GoogleLogin.GetDeviceCode();
+            _authType = type;
         }
-
-        /// <summary>
-        ///  Only use it you are implementing GUI
-        /// </summary>
-        /// <param name="deviceCode"></param>
-        /// <returns></returns>
-        public async Task<GoogleLogin.TokenResponseModel> GetAndSetGoogleAccessToken(GoogleLogin.DeviceCodeModel deviceCode)
-        {
-            var tokenResponse = await GoogleLogin.GetAccessToken(deviceCode);
-            _accessToken = tokenResponse.id_token;
-            _settings.GoogleRefreshToken = tokenResponse.access_token;
-            return tokenResponse;
-        }
-
-
 
         public async Task DoPtcLogin(string username, string password)
         {
-            _accessToken = await PtcLogin.GetAccessToken(username, password);
+            AccessToken = await PtcLogin.GetAccessToken(username, password);
             _authType = AuthType.Ptc;
         }
 
@@ -122,7 +108,7 @@ namespace PokemonGo.RocketAPI
 
         public async Task SetServer()
         {
-            var serverRequest = RequestBuilder.GetInitialRequest(_accessToken, _authType, CurrentLat, CurrentLng, 10,
+            var serverRequest = RequestBuilder.GetInitialRequest(AccessToken, _authType, CurrentLat, CurrentLng, 10,
                 RequestType.GET_PLAYER, RequestType.GET_HATCHED_OBJECTS, RequestType.GET_INVENTORY,
                 RequestType.CHECK_AWARDED_BADGES, RequestType.DOWNLOAD_SETTINGS);
             var serverResponse = await _httpClient.PostProto<Request>(Resources.RpcUrl, serverRequest);
@@ -142,7 +128,7 @@ namespace PokemonGo.RocketAPI
 
         public async Task<GetPlayerResponse> GetProfile()
         {
-            var profileRequest = RequestBuilder.GetInitialRequest(_accessToken, _authType, CurrentLat, CurrentLng, 10,
+            var profileRequest = RequestBuilder.GetInitialRequest(AccessToken, _authType, CurrentLat, CurrentLng, 10,
                 new Request.Types.Requests() { Type = (int)RequestType.GET_PLAYER });
             return await _httpClient.PostProtoPayload<Request, GetPlayerResponse>($"https://{_apiUrl}/rpc", profileRequest);
         }
