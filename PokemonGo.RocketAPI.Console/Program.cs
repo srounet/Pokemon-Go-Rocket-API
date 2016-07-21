@@ -8,7 +8,7 @@ namespace PokemonGo.RocketAPI.Console
     {
         static void Main(string[] args)
         {
-            Logger.SetLogger(new Logging.ConsoleLogger(LogLevel.Info));
+            Logger.SetLogger(new ConsoleLogger(LogLevel.Info));
 
             Task.Run(() =>
             {

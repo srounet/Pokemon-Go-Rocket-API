@@ -93,7 +93,6 @@
     <Compile Include="Helpers\S2Helper.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="ISettings.cs" />
-    <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Login\GoogleLogin.cs" />

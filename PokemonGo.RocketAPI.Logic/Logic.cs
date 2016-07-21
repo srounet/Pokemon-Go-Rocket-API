@@ -56,6 +56,10 @@ namespace PokemonGo.RocketAPI.Logic
                 try
                 {
                     await _client.SetServer();
+
+                    var inventory = await _client.GetInventory();
+                    var playerStats = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData).FirstOrDefault(i => i.PlayerStats != null);
+                    
                     await EvolveAllPokemonWithEnoughCandy();
                     await TransferDuplicatePokemon(true);
                     await RecycleItems();
@@ -139,7 +143,7 @@ namespace PokemonGo.RocketAPI.Logic
             CatchPokemonResponse caughtPokemonResponse;
             do
             {
-                if (encounter?.CaptureProbability.CaptureProbability_.First() < 0.4)
+                if (encounter?.CaptureProbability.CaptureProbability_.First() < 0.35)
                 {
                     //Throw berry is we can
                     await UseBerry(pokemon.EncounterId, pokemon.SpawnpointId);
