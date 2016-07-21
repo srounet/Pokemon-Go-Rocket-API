@@ -215,6 +215,7 @@ namespace PokemonGo.RocketAPI.Console
                 var fortInfo = await client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                 var fortSearch = await client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
 
+                System.Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] Using Pokestop: {fortInfo.Name}. GPS: {fortInfo.Latitude}, {fortInfo.Longitude}");
                 System.Console.WriteLine(
                     $"[{DateTime.Now.ToString("HH:mm:ss")}] Farmed XP: {fortSearch.ExperienceAwarded}, Gems: {fortSearch.GemsAwarded}, Eggs: {fortSearch.PokemonDataEgg} Items: {GetFriendlyItemsString(fortSearch.ItemsAwarded)}");
 
