@@ -185,7 +185,7 @@ namespace PokemonGo.RocketAPI.Console
 
                 await Task.Delay(5000);
 
-
+                await TransferAllWeakPokemon(client, ClientSettings.TransferCPThreshold);
                 await Task.Delay(5000);
             }
         }
