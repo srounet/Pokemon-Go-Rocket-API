@@ -44,7 +44,7 @@ namespace PokemonGo.RocketAPI.Logic
         {
             var myPokemon = await GetPokemons();
 
-            var pokemonList = myPokemon as IList<PokemonData> ?? myPokemon.ToList();
+            var pokemonList = myPokemon.Where(p => p.DeployedFortId == 0).ToList(); //Don't evolve pokemon in gyms
             if (keepPokemonsThatCanEvolve)
             {
                 var results = new List<PokemonData>();
@@ -87,7 +87,7 @@ namespace PokemonGo.RocketAPI.Logic
         public async Task<IEnumerable<PokemonData>> GetPokemonToEvolve()
         {
             var myPokemons = await GetPokemons();
-            var pokemons = myPokemons.ToList();
+            var pokemons = myPokemons.Where(p => p.DeployedFortId == 0).ToList(); //Don't evolve pokemon in gyms
 
             var myPokemonSettings = await GetPokemonSettings();
             var pokemonSettings = myPokemonSettings.ToList();
