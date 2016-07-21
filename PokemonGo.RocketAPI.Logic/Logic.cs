@@ -26,7 +26,7 @@ namespace PokemonGo.RocketAPI.Logic
             _inventory = new Inventory(_client);
         }
 
-        public async void Execute()
+        public async Task Execute()
         {
             Logger.Write($"Starting Execute on login server: {_clientSettings.AuthType}", LogLevel.Info);
 
