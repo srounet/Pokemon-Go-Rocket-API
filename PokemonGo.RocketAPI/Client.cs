@@ -63,11 +63,35 @@ namespace PokemonGo.RocketAPI
             
             if (_accessToken == null)
             {
-                var tokenResponse = await GoogleLogin.GetAccessToken();
-                _accessToken = tokenResponse.id_token;
-                _settings.GoogleRefreshToken = tokenResponse.access_token;
+                // Separate methods for GUI implementation
+                var deviceCode = await GetGoogleDeviceCode();
+                await GetAndSetGoogleAccessToken(deviceCode);
             }
         }
+
+        /// <summary>
+        /// Only use it you are implementing GUI
+        /// </summary>
+        /// <returns></returns>
+        public async Task<GoogleLogin.DeviceCodeModel> GetGoogleDeviceCode()
+        {
+            return await GoogleLogin.GetDeviceCode();
+        }
+
+        /// <summary>
+        ///  Only use it you are implementing GUI
+        /// </summary>
+        /// <param name="deviceCode"></param>
+        /// <returns></returns>
+        public async Task<GoogleLogin.TokenResponseModel> GetAndSetGoogleAccessToken(GoogleLogin.DeviceCodeModel deviceCode)
+        {
+            var tokenResponse = await GoogleLogin.GetAccessToken(deviceCode);
+            _accessToken = tokenResponse.id_token;
+            _settings.GoogleRefreshToken = tokenResponse.access_token;
+            return tokenResponse;
+        }
+
+
 
         public async Task DoPtcLogin(string username, string password)
         {
