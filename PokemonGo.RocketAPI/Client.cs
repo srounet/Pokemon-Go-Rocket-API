@@ -24,7 +24,8 @@ namespace PokemonGo.RocketAPI
 
         private double _currentLat;
         private double _currentLng;
-
+        public double currentLat;
+        public double currentLng;
         public Client(ISettings settings)
         {
             _settings = settings;
@@ -48,6 +49,8 @@ namespace PokemonGo.RocketAPI
 
         private void SetCoordinates(double lat, double lng)
         {
+            currentLat = lat;
+            currentLng = lng;
             _currentLat = lat;
             _currentLng = lng;
         }
