@@ -56,7 +56,7 @@ namespace PokemonGo.RocketAPI.Logic
                 try
                 {
                     await _client.SetServer();
-                    //await EvolveAllPokemonWithEnoughCandy();
+                    await EvolveAllPokemonWithEnoughCandy();
                     await TransferDuplicatePokemon(true);
                     await RecycleItems();
                     await ExecuteFarmingPokestopsAndPokemons();
@@ -98,7 +98,7 @@ namespace PokemonGo.RocketAPI.Logic
 
             foreach (var pokeStop in pokeStops)
             {
-                double distance = _distance(_client.currentLat, _client.currentLng, pokeStop.Latitude, pokeStop.Longitude);
+                var distance = Navigation.DistanceBetween2Coordinates(_client.CurrentLat, _client.CurrentLng, pokeStop.Latitude, pokeStop.Longitude);
                 var update = await _client.UpdatePlayerLocation(pokeStop.Latitude, pokeStop.Longitude);
                 var fortInfo = await _client.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
                 var fortSearch = await _client.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
@@ -119,15 +119,12 @@ namespace PokemonGo.RocketAPI.Logic
 
             foreach (var pokemon in pokemons)
             {
-                double distance = _distance(_client.currentLat, _client.currentLng, pokemon.Latitude, pokemon.Longitude);
+                var distance = Navigation.DistanceBetween2Coordinates(_client.CurrentLat, _client.CurrentLng, pokemon.Latitude, pokemon.Longitude);
                 if (distance > 100)
-                {
                     await Task.Delay(15000);
-                }
                 else
-                {
                     await Task.Delay(500);
-                }
+
                 await _client.UpdatePlayerLocation(pokemon.Latitude, pokemon.Longitude);
 
                 var encounter = await _client.EncounterPokemon(pokemon.EncounterId, pokemon.SpawnpointId);
@@ -149,7 +146,7 @@ namespace PokemonGo.RocketAPI.Logic
                 }
 
                 var pokeball = await GetBestBall(encounter?.WildPokemon);
-                double distance = _distance(_client.currentLat, _client.currentLng, pokemon.Latitude, pokemon.Longitude);
+                var distance = Navigation.DistanceBetween2Coordinates(_client.CurrentLat, _client.CurrentLng, pokemon.Latitude, pokemon.Longitude);
                 caughtPokemonResponse = await _client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, pokemon.Latitude, pokemon.Longitude, pokeball);
                 Logger.Write(caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess ? $"We caught a {pokemon.PokemonId} with CP {encounter?.WildPokemon?.PokemonData?.Cp} and CaptureProbability: {encounter?.CaptureProbability.CaptureProbability_.First()} using a {pokeball} in {Math.Round(distance)}m distance" : $"{pokemon.PokemonId} with CP {encounter?.WildPokemon?.PokemonData?.Cp} CaptureProbability: {encounter?.CaptureProbability.CaptureProbability_.First()} in {Math.Round(distance)}m distance {caughtPokemonResponse.Status} while using a {pokeball}..", LogLevel.Info);
                 await Task.Delay(2000);
@@ -197,18 +194,6 @@ namespace PokemonGo.RocketAPI.Logic
                 await Task.Delay(500);
             }
         }
-        private double _distance(double Lat1, double Lng1, double Lat2, double Lng2)
-        {
-            double r_earth = 6378137;
-            double d_lat = (Lat2 - Lat1) * Math.PI / 180;
-            double d_lon = (Lng2 - Lng1) * Math.PI / 180;
-            double alpha = Math.Sin(d_lat / 2) * Math.Sin(d_lat / 2)
-                + Math.Cos(Lat1 * Math.PI / 180) * Math.Cos(Lat2 * Math.PI / 180)
-                * Math.Sin(d_lon / 2) * Math.Sin(d_lon / 2);
-            double d = 2 * r_earth * Math.Atan2(Math.Sqrt(alpha), Math.Sqrt(1 - alpha));
-            return d;
-        }
-
 
         private async Task<MiscEnums.Item> GetBestBall(WildPokemon pokemon)
         {
