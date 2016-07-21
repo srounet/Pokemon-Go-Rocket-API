@@ -151,8 +151,16 @@ namespace PokemonGo.RocketAPI.Console
             if (ClientSettings.EvolveAllGivenPokemons)
                 await EvolveAllGivenPokemons(client, pokemons);
 
-
-            await ExecuteFarmingPokestopsAndPokemons(client);
+            try
+            {
+                await ExecuteFarmingPokestopsAndPokemons(client);
+            }
+            catch (Exception)
+            {
+                System.Console.WriteLine("Unexpected stop... restarting in 20 seconds.");
+                await Task.Delay(20000);
+                Execute();
+            }
 
 
             //await ExecuteCatchAllNearbyPokemons(client);
