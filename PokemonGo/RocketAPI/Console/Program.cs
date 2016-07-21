@@ -290,7 +290,7 @@ namespace PokemonGo.RocketAPI.Console
                     .ToList();
 
                 var unwantedPokemon =
-                    pokemonOfDesiredType.Skip(1) // keep the strongest one for potential battle-evolving
+                    pokemonOfDesiredType.Skip(4) // keep the strongest one for potential battle-evolving
                         .ToList();
 
                 System.Console.WriteLine($"Grinding {unwantedPokemon.Count} pokemons of type {unwantedPokemonType}");
