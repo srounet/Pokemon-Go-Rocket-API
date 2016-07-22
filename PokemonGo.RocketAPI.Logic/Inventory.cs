@@ -49,7 +49,7 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 var results = new List<PokemonData>();
                 var pokemonsThatCanBeTransfered = pokemonList.GroupBy(p => p.PokemonId)
-                    .Where(x => x.Count() > 4).ToList();
+                    .Where(x => x.Count() > 2).ToList();
 
                 var myPokemonSettings = await GetPokemonSettings();
                 var pokemonSettings = myPokemonSettings.ToList();
@@ -79,7 +79,7 @@ namespace PokemonGo.RocketAPI.Logic
             
             return pokemonList
                 .GroupBy(p => p.PokemonId)
-                .Where(x => x.Count() > 1)
+                .Where(x => x.Count() > 3)
                 .SelectMany(p => p.Where(x => x.Favorite == 0).OrderByDescending(x => x.Cp).ThenBy(n => n.StaminaMax).Skip(1).ToList());
         }
 
