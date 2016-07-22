@@ -60,7 +60,7 @@ namespace PokemonGo.RocketAPI.Logic
                     var inventory = await _client.GetInventory();
                     var playerStats = inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData).FirstOrDefault(i => i.PlayerStats != null);
                     
-                    await EvolveAllPokemonWithEnoughCandy();
+                    // await EvolveAllPokemonWithEnoughCandy();
                     await TransferDuplicatePokemon();
                     await RecycleItems();
                     await ExecuteFarmingPokestopsAndPokemons();
@@ -109,7 +109,7 @@ namespace PokemonGo.RocketAPI.Logic
                 Logger.Write($"Using Pokestop: {fortInfo.Name} in {Math.Round(distance)}m distance");
                 Logger.Write($"Farmed XP: {fortSearch.ExperienceAwarded}, Gems: { fortSearch.GemsAwarded}, Eggs: {fortSearch.PokemonDataEgg} Items: {StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded)}", LogLevel.Info);
                 await Task.Delay(1000);
-                await RecycleItems();
+                // await RecycleItems();
                 await ExecuteCatchAllNearbyPokemons();
                 await TransferDuplicatePokemon();
             }
