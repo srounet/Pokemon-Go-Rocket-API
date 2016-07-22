@@ -181,9 +181,27 @@ namespace PokemonGo.RocketAPI.Logic
 
             foreach (var duplicatePokemon in duplicatePokemons)
             {
-                var transfer = await _client.TransferPokemon(duplicatePokemon.Id);
-                Logger.Write($"Transfer {duplicatePokemon.PokemonId} with {duplicatePokemon.Cp} CP", LogLevel.Info);
-                await Task.Delay(500);
+                // Blacklist for transfers (Preserve these types)
+                bool canTransferType = true;
+                if (duplicatePokemon.PokemonId == PokemonId.Magikarp
+                    || duplicatePokemon.PokemonId == PokemonId.Bulbasaur
+                    || duplicatePokemon.PokemonId == PokemonId.Ivysaur
+                    || duplicatePokemon.PokemonId == PokemonId.Venusaur
+                    || duplicatePokemon.PokemonId == PokemonId.Squirtle
+                    || duplicatePokemon.PokemonId == PokemonId.Wartortle
+                    || duplicatePokemon.PokemonId == PokemonId.Blastoise
+                    || duplicatePokemon.PokemonId == PokemonId.Charmender
+                    || duplicatePokemon.PokemonId == PokemonId.Charmeleon
+                    || duplicatePokemon.PokemonId == PokemonId.Charizard
+                    || duplicatePokemon.PokemonId == PokemonId.Golduck)
+                    canTransferType = false;
+
+                if (duplicatePokemon.Cp < 200 && canTransferType)
+                {
+                    var transfer = await _client.TransferPokemon(duplicatePokemon.Id);
+                    Logger.Write($"Transfer {duplicatePokemon.PokemonId} with {duplicatePokemon.Cp} CP", LogLevel.Info);
+                    await Task.Delay(500);
+                }
             }
         }
 
