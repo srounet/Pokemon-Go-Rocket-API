@@ -26,17 +26,17 @@ namespace PokemonGo.RocketAPI.Console
                 return new[]
                 {
                     new KeyValuePair<ItemId, int>(ItemId.ItemUnknown, 0),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 20),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 20),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemPokeBall, 30),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemGreatBall, 30),
                     new KeyValuePair<ItemId, int>(ItemId.ItemUltraBall, 50),
                     new KeyValuePair<ItemId, int>(ItemId.ItemMasterBall, 100),
 
-                    new KeyValuePair<ItemId, int>(ItemId.ItemPotion, 0),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 0),
-                    new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 20),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemPotion, 10),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemSuperPotion, 50),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemHyperPotion, 50),
                     new KeyValuePair<ItemId, int>(ItemId.ItemMaxPotion, 50),
 
-                    new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 10),
+                    new KeyValuePair<ItemId, int>(ItemId.ItemRevive, 50),
                     new KeyValuePair<ItemId, int>(ItemId.ItemMaxRevive, 50),
 
                      new KeyValuePair<ItemId, int>(ItemId.ItemLuckyEgg, 200),
@@ -51,7 +51,7 @@ namespace PokemonGo.RocketAPI.Console
                      new KeyValuePair<ItemId, int>(ItemId.ItemXDefense, 100),
                      new KeyValuePair<ItemId, int>(ItemId.ItemXMiracle, 100),
 
-                     new KeyValuePair<ItemId, int>(ItemId.ItemRazzBerry, 20),
+                     new KeyValuePair<ItemId, int>(ItemId.ItemRazzBerry, 10),
                      new KeyValuePair<ItemId, int>(ItemId.ItemBlukBerry, 10),
                      new KeyValuePair<ItemId, int>(ItemId.ItemNanabBerry, 10),
                      new KeyValuePair<ItemId, int>(ItemId.ItemWeparBerry, 30),
