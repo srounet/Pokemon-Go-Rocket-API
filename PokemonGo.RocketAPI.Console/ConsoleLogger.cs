@@ -44,10 +44,10 @@ namespace PokemonGo.RocketAPI.Console
                     System.Console.ForegroundColor = ConsoleColor.Yellow;
                     break;
                 case LogLevel.Info:
-                    System.Console.ForegroundColor = ConsoleColor.Green;
+                    System.Console.ForegroundColor = ConsoleColor.Gray;
                     break;
                 case LogLevel.Debug:
-                    System.Console.ForegroundColor = ConsoleColor.Gray;
+                    System.Console.ForegroundColor = ConsoleColor.Orange;
                     break;
                 default:
                     System.Console.ForegroundColor = ConsoleColor.White;
