@@ -143,32 +143,24 @@ namespace PokemonGo.RocketAPI.Logic
 
         private async Task CatchEncounter(EncounterResponse encounter, MapPokemon pokemon)
         {
-            if (encounter?.Status == EncounterResponse.Types.Status.EncounterSuccess)
-            {
-                CatchPokemonResponse caughtPokemonResponse;
-                do
-                {
-                    if (encounter?.CaptureProbability.CaptureProbability_.First() < 0.35)
-                    {
-                        //Throw berry is we can
-                        await UseBerry(pokemon.EncounterId, pokemon.SpawnpointId);
-                    }
 
-                    var pokeball = await GetBestBall(encounter?.WildPokemon);
-                    var distance = Navigation.DistanceBetween2Coordinates(_client.CurrentLat, _client.CurrentLng, pokemon.Latitude, pokemon.Longitude);
-                    caughtPokemonResponse = await _client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, pokemon.Latitude, pokemon.Longitude, pokeball);
-                    Logger.Write(caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess ? $"We caught a {pokemon.PokemonId} with CP {encounter?.WildPokemon?.PokemonData?.Cp} ({CalculatePokemonPerfection(encounter?.WildPokemon?.PokemonData).ToString("0.00")}% perfect) and CaptureProbability: {encounter?.CaptureProbability.CaptureProbability_.First()} using a {pokeball} in {Math.Round(distance)}m distance" : $"{pokemon.PokemonId} with CP {encounter?.WildPokemon?.PokemonData?.Cp} CaptureProbability: {encounter?.CaptureProbability.CaptureProbability_.First()} in {Math.Round(distance)}m distance {caughtPokemonResponse.Status} while using a {pokeball}..", LogLevel.Info);
-                    await Task.Delay(2000);
-                }
-                while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape);
-            }
-            else
+            CatchPokemonResponse caughtPokemonResponse;
+            do
             {
-                if (encounter?.Status == EncounterResponse.Types.Status.PokemonInventoryFull)
-                    Logger.Write($"Pokemon inventory full. {pokemon.PokemonId} avoided.", LogLevel.Warning);
-                else
-                    Logger.Write($"Unknown encounter error. {pokemon.PokemonId} avoided.", LogLevel.Error);
+                var probability = encounter?.CaptureProbability?.CaptureProbability_?.FirstOrDefault();
+                if (probability.HasValue && probability.Value < 0.35)
+                {
+                    //Throw berry is we can
+                    await UseBerry(pokemon.EncounterId, pokemon.SpawnpointId);
+                }
+
+                var pokeball = await GetBestBall(encounter?.WildPokemon);
+                var distance = Navigation.DistanceBetween2Coordinates(_client.CurrentLat, _client.CurrentLng, pokemon.Latitude, pokemon.Longitude);
+                caughtPokemonResponse = await _client.CatchPokemon(pokemon.EncounterId, pokemon.SpawnpointId, pokemon.Latitude, pokemon.Longitude, pokeball);
+                Logger.Write(caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchSuccess ? $"We caught a {pokemon.PokemonId} with CP {encounter?.WildPokemon?.PokemonData?.Cp} ({CalculatePokemonPerfection(encounter?.WildPokemon?.PokemonData).ToString("0.00")}% perfect) and CaptureProbability: {encounter?.CaptureProbability.CaptureProbability_.First()} using a {pokeball} in {Math.Round(distance)}m distance" : $"{pokemon.PokemonId} with CP {encounter?.WildPokemon?.PokemonData?.Cp} CaptureProbability: {encounter?.CaptureProbability.CaptureProbability_.First()} in {Math.Round(distance)}m distance {caughtPokemonResponse.Status} while using a {pokeball}..", LogLevel.Info);
+                await Task.Delay(2000);
             }
+            while (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed || caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape) ;
         }
 
         private async Task EvolveAllPokemonWithEnoughCandy(IEnumerable<PokemonId> filter = null)
