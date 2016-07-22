@@ -192,7 +192,7 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 // Blacklist for transfers (Preserve these types)
                 bool canTransferType = true;
-                if ( (duplicatePokemon.PokemonId == PokemonId.Magikarp && duplicatePokemon.Cp > 100)
+                if ( (duplicatePokemon.PokemonId == PokemonId.Magikarp && duplicatePokemon.Cp > 150)
                     || duplicatePokemon.PokemonId == PokemonId.Bulbasaur
                     || duplicatePokemon.PokemonId == PokemonId.Ivysaur
                     || duplicatePokemon.PokemonId == PokemonId.Venusaur
@@ -205,7 +205,7 @@ namespace PokemonGo.RocketAPI.Logic
                     || (duplicatePokemon.PokemonId == PokemonId.Golduck && duplicatePokemon.Cp > 900) )
                     canTransferType = false;
 
-                if (duplicatePokemon.Cp < 300 && canTransferType)
+                if (duplicatePokemon.Cp < 500 && canTransferType)
                 {
                     var transfer = await _client.TransferPokemon(duplicatePokemon.Id);
                     Logger.Write($"Transfer {duplicatePokemon.PokemonId} with {duplicatePokemon.Cp} CP", LogLevel.Info);
